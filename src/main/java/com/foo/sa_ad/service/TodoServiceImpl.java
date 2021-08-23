@@ -20,17 +20,16 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo getTodoById(Long id) {
-//        try {
+        try {
             return todoDao.getTodoById(id);
-//        } catch (Exception e) {
-//            throw new NotFoundTodoException(id);
-//        }
+        } catch (Exception e) {
+            throw new NotFoundTodoException(id);
+        }
     }
 
     @Override
     public Todo addNewTodo(Todo todo) {
-        return  todoDao.addNewTodo(todo);
-
+        return todoDao.addNewTodo(todo);
     }
 
     @Override
@@ -44,11 +43,11 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo changeTodoStatus(Todo todo) {
-        if (todo.getDone()) {
-            todo.setDone(false);
-        } else {
-            todo.setDone(true);
+        try {
+            todo.setDone(!todo.getDone());
+            return todoDao.changeTodoStatus(todo);
+        } catch (Exception e) {
+            throw new NotFoundTodoException(todo.getId());
         }
-        return todoDao.changeTodoStatus(todo);
     }
 }
