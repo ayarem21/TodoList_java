@@ -1,16 +1,17 @@
 package com.foo.sa_ad.dao;
 
 import com.foo.sa_ad.entity.Todo;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface TodoDao {
     List<Todo> getAllTodos();
 
-    ResponseEntity<Todo> getTodoById(Long id);
+    Todo getTodoById(Long id);
 
-    int addNewTodo(Todo todo);
+    Todo addNewTodo(Todo todo);
 
-    void deleteTodoById(Long id);
+    void deleteTodoById(Todo todo);
+
+    Todo changeTodoStatus(Todo todo);
 }

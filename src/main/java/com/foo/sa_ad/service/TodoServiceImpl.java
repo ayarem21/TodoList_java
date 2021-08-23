@@ -3,10 +3,7 @@ package com.foo.sa_ad.service;
 import com.foo.sa_ad.dao.TodoDao;
 import com.foo.sa_ad.entity.Todo;
 import com.foo.sa_ad.exception.NotFoundTodoException;
-import com.foo.sa_ad.exception.TodoException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,29 +19,36 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public ResponseEntity<Todo> getTodoById(Long id) {
-        try {
+    public Todo getTodoById(Long id) {
+//        try {
             return todoDao.getTodoById(id);
-        } catch (Exception e) {
-            throw new NotFoundTodoException(id);
-        }
+//        } catch (Exception e) {
+//            throw new NotFoundTodoException(id);
+//        }
     }
 
     @Override
-    public ResponseEntity<String> addNewTodo(Todo todo) {
-        if(todoDao.addNewTodo(todo) == 1) {
-            return ResponseEntity.ok("Todo created");
-        } else {
-            throw new TodoException();
-        }
+    public Todo addNewTodo(Todo todo) {
+        return  todoDao.addNewTodo(todo);
+
     }
 
     @Override
-    public void deleteTodoById(Long id) {
+    public void deleteTodoById(Todo todo) {
         try {
-            todoDao.deleteTodoById(id);
+            todoDao.deleteTodoById(todo);
         } catch (Exception e) {
-            throw new NotFoundTodoException(id);
+            throw new NotFoundTodoException(todo.getId());
         }
+    }
+
+    @Override
+    public Todo changeTodoStatus(Todo todo) {
+        if (todo.getDone()) {
+            todo.setDone(false);
+        } else {
+            todo.setDone(true);
+        }
+        return todoDao.changeTodoStatus(todo);
     }
 }
