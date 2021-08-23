@@ -3,13 +3,24 @@ package com.foo.sa_ad.entity;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "TODO")
 public class Todo {
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "NAME")
     private String name;
 
-    public Todo(Long id, String name) {
+    @Column(name = "IS_DONE")
+    Boolean isDone;
+
+    public Todo(Long id, String name, Boolean isDone) {
         this.id = id;
         this.name = name;
+        this.isDone = isDone;
     }
 
     public Todo() {
@@ -29,5 +40,13 @@ public class Todo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
     }
 }

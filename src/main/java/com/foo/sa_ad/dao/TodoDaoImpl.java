@@ -1,11 +1,14 @@
 package com.foo.sa_ad.dao;
 
 import com.foo.sa_ad.entity.Todo;
+import com.foo.sa_ad.util.HibernateSessionFactoryUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Repository
@@ -14,26 +17,45 @@ public class TodoDaoImpl implements TodoDao {
     JdbcOperations jdbcOperations;
     @Override
     public List<Todo> getAllTodos() {
-        return jdbcOperations.query("SELECT * FROM TODO",
-                (resultSet, i) -> new Todo(resultSet.getLong("id"),
-                resultSet.getString("name")));
+        List<Todo> todos = (List<Todo>) HibernateSessionFactoryUtil
+                .getSessionFactory()
+                .openSession()
+                .createQuery("From Todo")
+                .list();
+        return todos;
     }
 
     @Override
-    public ResponseEntity getTodoById(Long id) {
-        return ResponseEntity.ok(jdbcOperations.queryForObject("SELECT * FROM TODO WHERE id = ?",
-                (resultSet, i) -> new Todo(resultSet.getLong("id"),
-                        resultSet.getString("name")), id));
+    public Todo getTodoById(Long id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Todo.class, id);
     }
 
     @Override
-    public int addNewTodo(Todo todo) {
-        return jdbcOperations.update("INSERT INTO TODO (NAME) VALUES (?);",
-                todo.getName());
+    public Todo addNewTodo(Todo todo) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        Serializable id = session.save(todo);
+        tx1.commit();
+        session.close();
+        return getTodoById((Long) id);
     }
 
     @Override
-    public void deleteTodoById(Long id) {
-        jdbcOperations.update("DELETE FROM TODO WHERE id = ?", id);
+    public void deleteTodoById(Todo todo) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.delete(todo);
+        tx1.commit();
+        session.close();
+    }
+
+    @Override
+    public Todo changeTodoStatus(Todo todo) {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.saveOrUpdate(todo);
+        tx1.commit();
+        session.close();
+        return getTodoById(todo.getId());
     }
 }

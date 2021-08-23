@@ -3,7 +3,6 @@ package com.foo.sa_ad.controller;
 import com.foo.sa_ad.entity.Todo;
 import com.foo.sa_ad.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,17 +19,24 @@ public class TodoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Todo> getTodo(@PathVariable Long id) {
+    public Todo getTodo(@PathVariable Long id) {
         return todoService.getTodoById(id);
     }
 
     @PostMapping
-    public ResponseEntity<String> addTodo(@RequestBody Todo todo) {
+    public Todo addTodo(@RequestBody Todo todo) {
         return todoService.addNewTodo(todo);
     }
 
     @DeleteMapping("{id}")
     public void deleteTodo(@PathVariable Long id) {
-        todoService.deleteTodoById(id);
+        Todo todo = todoService.getTodoById(id);
+        todoService.deleteTodoById(todo);
+    }
+
+    @PatchMapping("{id}")
+    public Todo changeTodoDone(@PathVariable Long id) {
+        Todo todo = todoService.getTodoById(id);
+        return  todoService.changeTodoStatus(todo);
     }
 }
