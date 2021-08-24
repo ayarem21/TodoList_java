@@ -4,8 +4,6 @@ import com.foo.sa_ad.entity.Todo;
 import com.foo.sa_ad.util.HibernateSessionFactoryUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
@@ -13,8 +11,6 @@ import java.util.List;
 
 @Repository
 public class TodoDaoImpl implements TodoDao {
-    @Autowired
-    JdbcOperations jdbcOperations;
     @Override
     public List<Todo> getAllTodos() {
         List<Todo> todos = (List<Todo>) HibernateSessionFactoryUtil

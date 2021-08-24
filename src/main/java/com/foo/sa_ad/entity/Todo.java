@@ -15,7 +15,7 @@ public class Todo {
     private String name;
 
     @Column(name = "IS_DONE")
-    Boolean isDone;
+    private Boolean isDone;
 
     public Todo(Long id, String name, Boolean isDone) {
         this.id = id;
@@ -42,11 +42,11 @@ public class Todo {
         this.name = name;
     }
 
-    public Boolean getDone() {
+    public Boolean getIsDone() {
         return isDone;
     }
 
-    public void setDone(Boolean done) {
-        isDone = done;
+    public void setIsDone(Boolean isDone) {
+        this.isDone = isDone;
     }
 }

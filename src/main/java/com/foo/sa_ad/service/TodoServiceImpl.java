@@ -44,7 +44,7 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public Todo changeTodoStatus(Todo todo) {
         try {
-            todo.setDone(!todo.getDone());
+            todo.setIsDone(!todo.getIsDone());
             return todoDao.changeTodoStatus(todo);
         } catch (Exception e) {
             throw new NotFoundTodoException(todo.getId());
